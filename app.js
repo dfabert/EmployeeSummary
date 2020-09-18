@@ -16,6 +16,39 @@ const render = require("./lib/htmlRenderer");
 
 let employeeArray = [];
 
+function addManager () {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message:  "Enter the manager of this project's name"
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: "Enter the manager's ID number"
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message:  "Enter the manager's email"
+        },
+        {
+            type: 'input',
+            name: 'officeNumber',
+            message:  "Enter office number"
+        }
+    ]).then(data => {
+
+        const newManager = new Manager(data.name, data.id, data.email, data.officeNumber);
+        employeeArray.push(newManager);
+        console.log('-------------------------------------------');
+        console.log("Now enter employees assigned to the project")
+        addEmployee(employeeArray);
+
+        });
+}
+
 function addEmployee () {
     inquirer.prompt([
         {
@@ -37,7 +70,7 @@ function addEmployee () {
             type: 'list',
             message: "what is the employee's role.",
             name: 'role',
-            choices:  ['Engineer', 'Intern', 'Manager']
+            choices:  ['Engineer', 'Intern']
         }
     ]).then(data => {
 
@@ -58,10 +91,6 @@ function addEmployee () {
             case 'Intern':
                 console.log('You picked Intern');
                 newIntern(newEmployee);
-                break;
-            case 'Manager':
-                console.log('You picked Manager');
-                newManager(newEmployee);
                 break;
         }
     })
@@ -95,19 +124,7 @@ function newIntern(newEmployee){
         })
 }
 
-function newManager(newEmployee){
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'officeNumber',
-            message:  "Enter office number"
-        }
-    ]).then(data => {
-        const newManager = new Manager(newEmployee.name, newEmployee.id, newEmployee.email, data.officeNumber);
-        employeeArray.push(newManager);
-        doneOrLoop(employeeArray)
-        })
-}
+
 
 function doneOrLoop(employeeArray){
     inquirer.prompt([
@@ -129,7 +146,7 @@ function doneOrLoop(employeeArray){
 };
 
 
-addEmployee();
+addManager();
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
